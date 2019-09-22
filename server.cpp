@@ -6,11 +6,25 @@
 #include <string>
 #include <pthread.h>
 #include "messagepassing.h"
-
+#include "bank_account.h"
 
 #define NO_OF_THREADS 50
 
 int thread_counter;
+
+std::string* parseClientData(std::string clientMsg){
+    std::string* climsg = new std::string[4];
+    std::smatch match;
+    std::regex re_transaction_parse("(.[0-9]*)\\s(.[0-9]*)\\s(.[a-zA-Z]*)\\s(.[0-9]*)");
+    std::regex_search(clientMsg, match, re_transaction_parse);
+    if(match.size()>1){
+        climsg[0] = match.str(0);
+        climsg[1] = match.str(1);
+        climsg[2] = match.str(2);
+        climsg[3] = match.str(3);
+    }
+    return climsg;
+}
 
 void *worker(void *arg){
     int clientfd = (long)arg;
@@ -19,7 +33,14 @@ void *worker(void *arg){
 
     //Receive from client
     std::string msg = message.receiveMessage();
-    std::cout<< msg << std::endl;
+    //std::cout<< msg << std::endl;
+
+    //Print Parse data
+    std::string* parsedData = parseClientData(msg);
+    std::cout << parsedData[0] << std::endl;
+    std::cout << parsedData[1] << std::endl;
+    std::cout << parsedData[2] << std::endl;
+    std::cout << parsedData[3] << std::endl;
 
     //Send message to client
     message.sendMessage("Hello from server");

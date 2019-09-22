@@ -1,35 +1,23 @@
 #include <iostream>
 #include <list>
-
-#define MAX_NO_OF_ACCOUNTS 10
-
-class BankAccounts{
-    priva
-
-    public:
-    jhgjgjhgjhg
-    
-
+using namespace std;
+string* ret(){
+    string* c = new string[4];
+    c[0] = "Hello";
+    c[1] = "Hello3";
+    c[2] = "Hello4";
+    c[3] = "Hello5";
+    return c;
 }
-struct bank_account{
-    int accountId;
-    long balance;
-};
 
 void iterator(std::list<struct bank_account> q){
 
 }
 int main(){
-    //struct bank_account customer_accounts[MAX_NO_OF_ACCOUNTS];
+    string *tmp = ret();
+    cout << tmp[0] << endl;
+    cout << tmp[1] << endl;
+    cout << tmp[2] << endl;
+    cout << tmp[3] << endl;
 
-    std::list<struct bank_account> customer_accounts;
-
-    // for(int i = 0;i<MAX_NO_OF_ACCOUNTS;i++){
-    //     customer_accounts[i].accountId = i;
-    //     customer_accounts[i].balance = (float) i*10000;
-    // }
-
-    // for(int i = 0; i<MAX_NO_OF_ACCOUNTS;i++){
-    //     std::cout<< "Account Id: "<< customer_accounts[i].accountId << " Balance: "<< customer_accounts[i].balance << std::endl;
-    // }
 }
