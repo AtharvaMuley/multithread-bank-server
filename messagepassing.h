@@ -22,7 +22,7 @@ class MessagePassing{
     MessagePassing(int);
     
     //Class methods
-    void sendMessage(char,char msg[]);
+    void sendMessage(char msg[]);
     char* receiveMessage();
 };
 

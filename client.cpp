@@ -3,6 +3,7 @@
 #include <netinet/in.h>
 #include <unistd.h>
 #include <arpa/inet.h>
+#include "messagepassing.h"
 
 int main(int argc, char *argv[]){
     int clientfd,clientlen;
@@ -17,6 +18,13 @@ int main(int argc, char *argv[]){
     clientlen = sizeof(servaddr);
     connect(clientfd,(struct sockaddr *)&servaddr,clientlen);
 
+    MessagePassing message(clientfd);
 
+    //Send message to server
+    message.sendMessage("Hello from client");
+
+    //Receive from server
+    std::string msg = message.receiveMessage();
+    std::cout<< msg << std::endl;
     return 1;
 }

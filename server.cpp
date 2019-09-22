@@ -5,6 +5,8 @@
 #include <sys/types.h>
 #include <string>
 #include <pthread.h>
+#include "messagepassing.h"
+
 
 #define NO_OF_THREADS 50
 
@@ -13,7 +15,17 @@ int thread_counter;
 void *worker(void *arg){
     int clientfd = (long)arg;
     std::cout<<"Connection successful: "<<clientfd<< std::endl;
-    sleep(30);
+    MessagePassing message(clientfd);
+
+    //Receive from client
+    std::string msg = message.receiveMessage();
+    std::cout<< msg << std::endl;
+
+    //Send message to client
+    message.sendMessage("Hello from server");
+
+    
+    sleep(3);
     std::cout<<"Exiting client\ns";
     close(clientfd);
     thread_counter--;
