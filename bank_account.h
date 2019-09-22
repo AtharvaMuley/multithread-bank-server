@@ -30,6 +30,9 @@ class BankAccounts{
     void init(){}
     void addAccount(int accountNo, std::string name, long balance){}
     void viewAllAccountInfo(){}
+    bool islockable(int){}
+    long fetchBalance(int){}
+    void updateBalance(int,long){}
     struct bank_account fetchAccountInfo(int accountId){}
 };
 

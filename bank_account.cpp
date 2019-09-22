@@ -71,6 +71,29 @@ class BankAccounts{
             std::cout<< "Account Id: "<< it->accountId <<" Name: "<< it->name << " Balance: "<< it->balance << std::endl;
         }
     }
+    bool islockable(int accountId){
+        struct bank_account temp;
+        std::list<struct bank_account>:: iterator it;
+        for(it =customer_accounts.begin();it != customer_accounts.end();++it){
+            if(it->accountId == accountId){
+                return temp.is_locked; 
+            }
+        }
+        return false;  
+    }
+    long fetchBalance(int accountId){
+        struct bank_account temp;
+        std::list<struct bank_account>:: iterator it;
+        for(it =customer_accounts.begin();it != customer_accounts.end();++it){
+            if(it->accountId == accountId){
+                return temp.balance; 
+            }
+        }
+        return -1;
+    }
+    void updateBalance(int accountId,long updatedBalance){
+
+    }
     struct bank_account fetchAccountInfo(int accountId){
         struct bank_account temp;
         std::list<struct bank_account>:: iterator it;

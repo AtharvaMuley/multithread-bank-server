@@ -7,6 +7,7 @@
 #include <pthread.h>
 #include "messagepassing.h"
 #include "bank_account.h"
+#include "transaction.h"
 
 #define NO_OF_THREADS 50
 
@@ -28,6 +29,8 @@ std::string* parseClientData(std::string clientMsg){
 
 void *worker(void *arg){
     int clientfd = (long)arg;
+    BankAccounts account;
+    pthread_mutex_t lock;
     std::cout<<"Connection successful: "<<clientfd<< std::endl;
     MessagePassing message(clientfd);
 
@@ -37,11 +40,31 @@ void *worker(void *arg){
 
     //Print Parse data
     std::string* parsedData = parseClientData(msg);
-    std::cout << parsedData[0] << std::endl;
-    std::cout << parsedData[1] << std::endl;
-    std::cout << parsedData[2] << std::endl;
-    std::cout << parsedData[3] << std::endl;
 
+    // std::cout << parsedData[0] << std::endl;
+    // std::cout << parsedData[1] << std::endl;
+    // std::cout << parsedData[2] << std::endl;
+    // std::cout << parsedData[3] << std::endl;
+
+    //Try to accquire lock
+    // if (account.islockable(stoi(parsedData[1]))){ 
+    //     pthread_mutex_lock(&lock);
+
+    // }
+
+    std::cout << "starting Transaction for accountID:"<<parsedData[1]<<std::endl;
+    if(parsedData[2].compare("w") || parsedData[2].compare("W")){
+        std::cout << "Withdraw" << std::endl;
+        int transactionStatus = withdraw(stoi(parsedData[1]),stoi(parsedData[3]));
+        if (transactionStatus == 1){
+            message.sendMessage("Withdraw Transaction Successful!");
+        }
+        else
+        {
+            message.sendMessage("Withdraw Transaction Unsuccessful!");
+        }
+        
+    }
     //Send message to client
     message.sendMessage("Hello from server");
 
