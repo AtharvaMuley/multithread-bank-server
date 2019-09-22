@@ -1,6 +1,7 @@
 #include <iostream>
+#include "transaction.h"
 
-int main(){
+
+void withdraw(int accountNo){
     
-    return 1;
 }

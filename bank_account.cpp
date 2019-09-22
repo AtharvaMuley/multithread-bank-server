@@ -1,12 +1,6 @@
-#include <iostream>
-#include <list>
-#include <iterator>
-#include <string>
-#include <fstream>
-#include <regex>
-#include<stdlib.h>
+#include "bank_account.h"
 
-#define MAX_NO_OF_ACCOUNTS 10
+#define MAX_NO_OF_ACCOUNTS 100
 
 class BankAccounts{
     private:
@@ -15,6 +9,7 @@ class BankAccounts{
         int accountId;
         std::string name;
         long balance;
+        bool is_locked = false;
     };
     int no_of_accounts;
     std::list<struct bank_account> customer_accounts;
@@ -53,6 +48,7 @@ class BankAccounts{
                     tmp.balance = (long) std::stoi(match2.str(1));
                 }
                 addAccount(std::stoi(match.str(1)),match1.str(1), (long) std::stoi(match2.str(1)));
+                no_of_accounts++;
             }
             fp.close();
         }
@@ -69,15 +65,28 @@ class BankAccounts{
         tmp.balance = balance;
         customer_accounts.push_back(tmp);
     }
-    void viewAccountInfo(){
+    void viewAllAccountInfo(){
         std::list<struct bank_account>:: iterator it;
         for(it =customer_accounts.begin();it != customer_accounts.end();++it){
             std::cout<< "Account Id: "<< it->accountId <<" Name: "<< it->name << " Balance: "<< it->balance << std::endl;
         }
     }
+    struct bank_account fetchAccountInfo(int accountId){
+        struct bank_account temp;
+        std::list<struct bank_account>:: iterator it;
+        for(it =customer_accounts.begin();it != customer_accounts.end();++it){
+            if(it->accountId == accountId){
+                return temp; 
+            }
+        }
+        temp.accountId = accountId;
+        temp.balance = -1;
+        temp.name = "Not Found";
+        return temp;    
+    }
 };
 
 int main(){
     BankAccounts accounts;
-    accounts.viewAccountInfo();
+    accounts.viewAllAccountInfo();
 }
