@@ -15,13 +15,13 @@ int thread_counter;
 std::string* parseClientData(std::string clientMsg){
     std::string* climsg = new std::string[4];
     std::smatch match;
-    std::regex re_transaction_parse("(.[0-9]*)\\s(.[0-9]*)\\s(.[a-zA-Z]*)\\s(.[0-9]*)");
+    std::regex re_transaction_parse("([0-9]*)\\s(.[0-9]*)\\s(.[a-zA-Z]*)\\s(.[0-9]*)");
     std::regex_search(clientMsg, match, re_transaction_parse);
-    if(match.size()>1){
-        climsg[0] = match.str(0);
-        climsg[1] = match.str(1);
-        climsg[2] = match.str(2);
-        climsg[3] = match.str(3);
+    if(match.size()>4){
+        climsg[0] = match.str(1);
+        climsg[1] = match.str(2);
+        climsg[2] = match.str(3);
+        climsg[3] = match.str(4);
     }
     return climsg;
 }
