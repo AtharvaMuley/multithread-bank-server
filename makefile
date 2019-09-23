@@ -11,8 +11,6 @@ client.o: client.cpp
 	$(CC) -c client.cpp
 messagepassing.o: messagepassing.cpp
 	$(CC) -c messagepassing.cpp
-transaction.o: transaction.cpp
-	$(CC) -c transaction.cpp
 bank_account.o: bank_account.cpp
 	$(CC) -c bank_account.cpp
 clean:
