@@ -86,6 +86,13 @@ int BankAccounts::withdraw(int accountNo, int amount){
         return 1;
     }
 }
+int BankAccounts::deposit(int accountNo, int amount){
+    int balance = fetchBalance(accountNo);
+    std::cout << balance << std::endl;
+        balance += amount;
+        updateBalance(accountNo,balance);
+        return 1;
+}
 void BankAccounts::updateBalance(int accountId,int updatedBalance){
     std::list<struct bank_account>:: iterator it;
         for(it =customer_accounts.begin();it != customer_accounts.end();it++){

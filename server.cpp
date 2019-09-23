@@ -54,6 +54,7 @@ void *worker(void *arg){
     // }
 
     std::cout << "starting Transaction for accountID:"<<parsedData[1]<<std::endl;
+    //withdraw money
     if(parsedData[2].compare("w") || parsedData[2].compare("W")){
         std::cout << "Withdraw" << std::endl;
         int transactionStatus = account.withdraw(stoi(parsedData[1]),stoi(parsedData[3]));
@@ -70,8 +71,22 @@ void *worker(void *arg){
         
         
     }
+    //Deposit money
+    if(parsedData[2].compare("d") || parsedData[2].compare("D")){
+        std::cout << "Deposit" << std::endl;
+        int transactionStatus = account.deposit(stoi(parsedData[1]),stoi(parsedData[3]));
+        if (transactionStatus == 1){
+            message.sendMessage("Deposit Transaction Successful!");
+        }
+        else
+        {
+            message.sendMessage("Deposit Transaction Unsuccessful!");
+        }
+        
+        
+    }
     //Send message to client
-    message.sendMessage("Hello from server");
+    //message.sendMessage("Hello from server");
 
     
     sleep(3);

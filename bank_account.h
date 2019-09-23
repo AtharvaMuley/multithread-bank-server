@@ -30,6 +30,7 @@ class BankAccounts{
     bool islockable(int);
     int fetchBalance(int);
     int withdraw(int accountNo, int amount);
+    int deposit(int accountNo, int amount);
     void updateBalance(int,int);
     // struct bank_account fetchAccountInfo(int accountId);
 };
