@@ -7,11 +7,11 @@
 #include <pthread.h>
 #include "messagepassing.h"
 #include "bank_account.h"
-#include "transaction.h"
 
 #define NO_OF_THREADS 50
 
 int thread_counter;
+BankAccounts account;
 
 std::string* parseClientData(std::string clientMsg){
     std::string* climsg = new std::string[4];
@@ -29,7 +29,7 @@ std::string* parseClientData(std::string clientMsg){
 
 void *worker(void *arg){
     int clientfd = (long)arg;
-    BankAccounts account;
+    
     pthread_mutex_t lock;
     std::cout<<"Connection successful: "<<clientfd<< std::endl;
     MessagePassing message(clientfd);
@@ -41,6 +41,7 @@ void *worker(void *arg){
     //Print Parse data
     std::string* parsedData = parseClientData(msg);
 
+    std::cout << account.fetchBalance(stoi(parsedData[1]))<<std::endl;
     // std::cout << parsedData[0] << std::endl;
     // std::cout << parsedData[1] << std::endl;
     // std::cout << parsedData[2] << std::endl;
@@ -55,7 +56,7 @@ void *worker(void *arg){
     std::cout << "starting Transaction for accountID:"<<parsedData[1]<<std::endl;
     if(parsedData[2].compare("w") || parsedData[2].compare("W")){
         std::cout << "Withdraw" << std::endl;
-        int transactionStatus = withdraw(stoi(parsedData[1]),stoi(parsedData[3]));
+        int transactionStatus = account.withdraw(stoi(parsedData[1]),stoi(parsedData[3]));
         if (transactionStatus == 1){
             message.sendMessage("Withdraw Transaction Successful!");
         }
@@ -106,6 +107,7 @@ int main(int argc, char *arhv[]){
 
     int addrlen,rc;
     addrlen = sizeof(cliaddr);
+    account.init();
     pthread_t threads[5];
     thread_counter = 0;
     while (1)

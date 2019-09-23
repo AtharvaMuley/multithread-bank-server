@@ -1,3 +1,6 @@
+#ifndef Bank_Account_H
+#define Bank_Account_H
+
 #include <iostream>
 #include <list>
 #include <iterator>
@@ -6,17 +9,13 @@
 #include <regex>
 #include<stdlib.h>
 
-#ifndef Bank_Account_H
-#define Bank_Account_H
-
-
 class BankAccounts{
     private:
     struct bank_account
     {
         int accountId;
         std::string name;
-        long balance;
+        int balance;
         bool is_locked = false;
     };
     int no_of_accounts;
@@ -24,16 +23,15 @@ class BankAccounts{
 
     public:
     //constructor
-    BankAccounts(){
-        init();
-    }
-    void init(){}
-    void addAccount(int accountNo, std::string name, long balance){}
-    void viewAllAccountInfo(){}
-    bool islockable(int){}
-    long fetchBalance(int){}
-    void updateBalance(int,long){}
-    struct bank_account fetchAccountInfo(int accountId){}
+    BankAccounts();
+    void init();
+    void addAccount(int accountNo, std::string name, long balance);
+    void viewAllAccountInfo();
+    bool islockable(int);
+    int fetchBalance(int);
+    int withdraw(int accountNo, int amount);
+    void updateBalance(int,int);
+    // struct bank_account fetchAccountInfo(int accountId);
 };
 
 #endif

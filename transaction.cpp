@@ -11,7 +11,7 @@ int withdraw(int accountNo, int amount){
     }
     else{
         balance -= amount;
-        account.updateBalance(accountNo,balance);
+        // account.updateBalance(accountNo,balance);
         return 1;
     }
 }
