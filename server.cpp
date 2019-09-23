@@ -59,10 +59,14 @@ void *worker(void *arg){
         if (transactionStatus == 1){
             message.sendMessage("Withdraw Transaction Successful!");
         }
+        else if(transactionStatus == -1){
+            message.sendMessage("Insufficient Funds!");
+        }
         else
         {
             message.sendMessage("Withdraw Transaction Unsuccessful!");
         }
+        
         
     }
     //Send message to client

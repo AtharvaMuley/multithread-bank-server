@@ -2,7 +2,7 @@
 
 #ifndef Transaction_H
 #define Transaction_H
-int withdraw(int,float){}
+int withdraw(int,int){}
 void deposit(){}
 void intrest(){}
 #endif
