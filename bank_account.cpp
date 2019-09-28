@@ -59,10 +59,24 @@ bool BankAccounts::islockable(int accountId){
     std::list<struct bank_account>:: iterator it;
     for(it =customer_accounts.begin();it != customer_accounts.end();++it){
         if(it->accountId == accountId){
-            return temp.is_locked; 
+            pthread_mutex_lock(&it->mutex);
+            pthread_cond_wait(&it->lock,&it->mutex); 
+            return true; 
         }
     }
-    return false;  
+    return false; 
+}
+bool BankAccounts::removeLock(int accountId){
+    struct bank_account temp;
+    std::list<struct bank_account>:: iterator it;
+    for(it =customer_accounts.begin();it != customer_accounts.end();++it){
+        if(it->accountId == accountId){
+            pthread_cond_signal(&it->lock);
+            pthread_mutex_unlock(&it->mutex);
+            return true; 
+        }
+    }
+    return false;
 }
 int BankAccounts::fetchBalance(int accountId){
     struct bank_account temp;
@@ -76,7 +90,6 @@ int BankAccounts::fetchBalance(int accountId){
 }
 int BankAccounts::withdraw(int accountNo, int amount){
     int balance = fetchBalance(accountNo);
-    std::cout << balance << std::endl;
     if (amount > balance){
         return -1;
     }
@@ -97,7 +110,7 @@ void BankAccounts::updateBalance(int accountId,int updatedBalance){
     std::list<struct bank_account>:: iterator it;
         for(it =customer_accounts.begin();it != customer_accounts.end();it++){
             if(it->accountId == accountId){
-                std::cout << "Updated balance "<< updatedBalance << std::endl;
+                std::cout << "Updated balance for AccountId: "<< updatedBalance << std::endl;
                 it->balance = updatedBalance;
                 return;
             }

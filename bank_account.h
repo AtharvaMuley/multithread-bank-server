@@ -8,6 +8,7 @@
 #include <fstream>
 #include <regex>
 #include<stdlib.h>
+#include <pthread.h>
 
 class BankAccounts{
     private:
@@ -17,6 +18,8 @@ class BankAccounts{
         std::string name;
         int balance;
         bool is_locked = false;
+        pthread_mutex_t mutex;
+        pthread_cond_t lock;
     };
     int no_of_accounts;
     std::list<struct bank_account> customer_accounts;
@@ -28,6 +31,7 @@ class BankAccounts{
     void addAccount(int accountNo, std::string name, long balance);
     void viewAllAccountInfo();
     bool islockable(int);
+    bool removeLock(int);
     int fetchBalance(int);
     int withdraw(int accountNo, int amount);
     int deposit(int accountNo, int amount);

@@ -41,7 +41,7 @@ void *worker(void *arg){
     //Print Parse data
     std::string* parsedData = parseClientData(msg);
 
-    std::cout << account.fetchBalance(stoi(parsedData[1]))<<std::endl;
+    // std::cout << account.fetchBalance(stoi(parsedData[1]))<<std::endl;
     // std::cout << parsedData[0] << std::endl;
     // std::cout << parsedData[1] << std::endl;
     // std::cout << parsedData[2] << std::endl;
@@ -53,8 +53,11 @@ void *worker(void *arg){
 
     // }
 
-    std::cout << "starting Transaction for accountID:"<<parsedData[1]<<std::endl;
+    std::cout << "Transacting for accountID: "<<parsedData[1]<< " from ClientID: "<<clientfd<<std::endl;
+    account.islockable(stoi(parsedData[1]));
     //withdraw money
+    sleep(7);
+
     if(parsedData[2].compare("w") || parsedData[2].compare("W")){
         std::cout << "Withdraw" << std::endl;
         int transactionStatus = account.withdraw(stoi(parsedData[1]),stoi(parsedData[3]));
@@ -72,7 +75,7 @@ void *worker(void *arg){
         
     }
     //Deposit money
-    if(parsedData[2].compare("d") || parsedData[2].compare("D")){
+    else if(parsedData[2].compare("d") || parsedData[2].compare("D")){
         std::cout << "Deposit" << std::endl;
         int transactionStatus = account.deposit(stoi(parsedData[1]),stoi(parsedData[3]));
         if (transactionStatus == 1){
@@ -88,9 +91,9 @@ void *worker(void *arg){
     //Send message to client
     //message.sendMessage("Hello from server");
 
+    account.removeLock(stoi(parsedData[1]));
     
-    sleep(3);
-    std::cout<<"Exiting client\ns";
+    // std::cout<<"Exiting client\ns";
     close(clientfd);
     thread_counter--;
     pthread_exit(NULL);
