@@ -27,11 +27,18 @@ std::string* parseClientData(std::string clientMsg){
     return climsg;
 }
 
+void *intrestDeamon(void *arg){
+    while(1){
+        account.intrest();
+    sleep(5);
+    }
+}
+
 void *worker(void *arg){
     int clientfd = (long)arg;
     
     pthread_mutex_t lock;
-    std::cout<<"Connection successful: "<<clientfd<< std::endl;
+    // std::cout<<"Connection successful: "<<clientfd<< std::endl;
     MessagePassing message(clientfd);
 
     //Receive from client
@@ -56,10 +63,10 @@ void *worker(void *arg){
     std::cout << "Transacting for accountID: "<<parsedData[1]<< " from ClientID: "<<clientfd<<std::endl;
     account.islockable(stoi(parsedData[1]));
     //withdraw money
-    sleep(7);
+    sleep(3);
 
     if(parsedData[2].compare("w") || parsedData[2].compare("W")){
-        std::cout << "Withdraw" << std::endl;
+        // std::cout << "Withdraw" << std::endl;
         int transactionStatus = account.withdraw(stoi(parsedData[1]),stoi(parsedData[3]));
         if (transactionStatus == 1){
             message.sendMessage("Withdraw Transaction Successful!");
@@ -76,7 +83,7 @@ void *worker(void *arg){
     }
     //Deposit money
     else if(parsedData[2].compare("d") || parsedData[2].compare("D")){
-        std::cout << "Deposit" << std::endl;
+        // std::cout << "Deposit" << std::endl;
         int transactionStatus = account.deposit(stoi(parsedData[1]),stoi(parsedData[3]));
         if (transactionStatus == 1){
             message.sendMessage("Deposit Transaction Successful!");
@@ -114,7 +121,7 @@ int main(int argc, char *arhv[]){
     //Assign IP with port 
     servaddr.sin_family = AF_INET;
     servaddr.sin_addr.s_addr = INADDR_ANY;
-    servaddr.sin_port = htons(8084);
+    servaddr.sin_port = htons(8085);
 
     //bind ip with port 
     bind(sockfd,(struct sockaddr *) &servaddr, sizeof(servaddr));
@@ -128,6 +135,9 @@ int main(int argc, char *arhv[]){
     account.init();
     pthread_t threads[5];
     thread_counter = 0;
+    pthread_t intrestThread;
+    rc = pthread_create(&intrestThread,NULL, intrestDeamon,NULL);
+    pthread_join(intrestThread,NULL);
     while (1)
     {
     clientfd = accept(sockfd,(struct sockaddr * )&cliaddr,(socklen_t *)&addrlen);
@@ -143,7 +153,7 @@ int main(int argc, char *arhv[]){
         {
             
         }
-        std::cout<<"Thread:"<<thread_counter << endl;
+        // std::cout<<"Thread:"<<thread_counter << endl;
     }
     }
     return 1;

@@ -11,7 +11,7 @@
 #include <pthread.h>
 
 class BankAccounts{
-    private:
+    public:
     struct bank_account
     {
         int accountId;
@@ -24,7 +24,6 @@ class BankAccounts{
     int no_of_accounts;
     std::list<struct bank_account> customer_accounts;
 
-    public:
     //constructor
     BankAccounts();
     void init();
@@ -36,6 +35,7 @@ class BankAccounts{
     int withdraw(int accountNo, int amount);
     int deposit(int accountNo, int amount);
     void updateBalance(int,int);
+    void intrest();
     // struct bank_account fetchAccountInfo(int accountId);
 };
 

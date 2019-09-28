@@ -54,6 +54,16 @@ void BankAccounts::viewAllAccountInfo(){
         std::cout<< "Account Id: "<< it->accountId <<" Name: "<< it->name << " Balance: "<< it->balance << std::endl;
     }
 }
+void BankAccounts::intrest(){
+    std::list<struct bank_account>:: iterator it;
+    for(it =customer_accounts.begin();it != customer_accounts.end();++it){
+        islockable(it->accountId);
+        int balance = fetchBalance(it->accountId);
+        balance += balance*0.005;
+        updateBalance(it->accountId,balance);
+        removeLock(it->accountId);
+    }
+}
 bool BankAccounts::islockable(int accountId){
     struct bank_account temp;
     std::list<struct bank_account>:: iterator it;
@@ -110,7 +120,7 @@ void BankAccounts::updateBalance(int accountId,int updatedBalance){
     std::list<struct bank_account>:: iterator it;
         for(it =customer_accounts.begin();it != customer_accounts.end();it++){
             if(it->accountId == accountId){
-                std::cout << "Updated balance for AccountId: "<< updatedBalance << std::endl;
+                std::cout << "Updated balance for AccountId: "<< accountId <<" is: "<<updatedBalance << std::endl;
                 it->balance = updatedBalance;
                 return;
             }

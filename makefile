@@ -14,4 +14,4 @@ messagepassing.o: messagepassing.cpp
 bank_account.o: bank_account.cpp
 	$(CC) -c bank_account.cpp
 clean:
-	rm -rf *.o
+	rm -rf *.o client server
