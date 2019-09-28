@@ -29,7 +29,7 @@ std::string* parseClientData(std::string clientMsg){
 
 void *interestDeamon(void *arg){
     while(1){
-        account.intrest();
+        account.interest();
     sleep(5);
     }
 }
@@ -149,10 +149,7 @@ int main(int argc, char *arhv[]){
         rc = pthread_create(&threads[thread_counter],NULL,worker,(void *)clientfd);
         // pthread_join(threads[thread_counter],NULL);
         thread_counter++;
-        while (thread_counter > NO_OF_THREADS)
-        {
-            
-        }
+        while (thread_counter > NO_OF_THREADS){}
         // std::cout<<"Thread:"<<thread_counter << endl;
     }
     }
