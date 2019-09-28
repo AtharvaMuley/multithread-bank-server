@@ -35,7 +35,7 @@ class BankAccounts{
     int withdraw(int accountNo, int amount);
     int deposit(int accountNo, int amount);
     void updateBalance(int,int);
-    void intrest();
+    void interest();
     // struct bank_account fetchAccountInfo(int accountId);
 };
 

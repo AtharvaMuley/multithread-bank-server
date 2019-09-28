@@ -54,7 +54,7 @@ void BankAccounts::viewAllAccountInfo(){
         std::cout<< "Account Id: "<< it->accountId <<" Name: "<< it->name << " Balance: "<< it->balance << std::endl;
     }
 }
-void BankAccounts::intrest(){
+void BankAccounts::interest(){
     std::list<struct bank_account>:: iterator it;
     for(it =customer_accounts.begin();it != customer_accounts.end();++it){
         islockable(it->accountId);

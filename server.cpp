@@ -27,7 +27,7 @@ std::string* parseClientData(std::string clientMsg){
     return climsg;
 }
 
-void *intrestDeamon(void *arg){
+void *interestDeamon(void *arg){
     while(1){
         account.intrest();
     sleep(5);
@@ -135,9 +135,9 @@ int main(int argc, char *arhv[]){
     account.init();
     pthread_t threads[5];
     thread_counter = 0;
-    pthread_t intrestThread;
-    rc = pthread_create(&intrestThread,NULL, intrestDeamon,NULL);
-    pthread_join(intrestThread,NULL);
+    pthread_t interestThread;
+    rc = pthread_create(&interestThread,NULL, interestDeamon,NULL);
+    pthread_join(interestThread,NULL);
     while (1)
     {
     clientfd = accept(sockfd,(struct sockaddr * )&cliaddr,(socklen_t *)&addrlen);
