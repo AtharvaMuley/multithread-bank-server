@@ -17,9 +17,9 @@ class BankAccounts{
         int accountId;
         std::string name;
         int balance;
-        bool is_locked = false;
-        pthread_mutex_t mutex;
-        pthread_cond_t lock;
+        //bool is_locked = false;
+        pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+        pthread_cond_t lock = PTHREAD_COND_INITIALIZER;
     };
     int no_of_accounts;
     std::list<struct bank_account> customer_accounts;

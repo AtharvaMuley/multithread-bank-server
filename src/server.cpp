@@ -28,9 +28,10 @@ std::string* parseClientData(std::string clientMsg){
 }
 
 void *interestDeamon(void *arg){
+	std::cout<< "Started calculating Interest\n";
     while(1){
         account.interest();
-    sleep(5);
+    sleep(15);
     }
 }
 
@@ -43,7 +44,7 @@ void *worker(void *arg){
 
     //Receive from client
     std::string msg = message.receiveMessage();
-    //std::cout<< msg << std::endl;
+    std::cout<< msg << std::endl;
 
     //Print Parse data
     std::string* parsedData = parseClientData(msg);
@@ -54,16 +55,10 @@ void *worker(void *arg){
     // std::cout << parsedData[2] << std::endl;
     // std::cout << parsedData[3] << std::endl;
 
-    //Try to accquire lock
-    // if (account.islockable(stoi(parsedData[1]))){ 
-    //     pthread_mutex_lock(&lock);
-
-    // }
-
     std::cout << "Transacting for accountID: "<<parsedData[1]<< " from ClientID: "<<clientfd<<std::endl;
     account.islockable(stoi(parsedData[1]));
     //withdraw money
-    sleep(3);
+    //sleep(3);
 
     if(parsedData[2] == "w" || parsedData[2]=="W"){
         // std::cout << "Withdraw" << std::endl;
@@ -106,27 +101,35 @@ void *worker(void *arg){
     pthread_exit(NULL);
 }
 
-using namespace std;
 int main(int argc, char *arhv[]){
     int sockfd,clientfd;
     struct sockaddr_in servaddr,cliaddr;
-    sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    sockfd = socket(PF_INET, SOCK_STREAM, 0);
+    int optval = 1;
+    setsockopt(sockfd,SOL_SOCKET, SO_REUSEPORT, &optval, sizeof(optval));
     if(sockfd < 0 ){
-        std::cerr << "Error: " << std::endl;
+        std::cerr << "Socket Error: " << std::endl;
+	exit(0);
     }
 
     //fill servaddr with zeros 
     // memset(&servaddr,0, sizeof(struct sockaddr_in));
 
     //Assign IP with port 
-    servaddr.sin_family = AF_INET;
+    servaddr.sin_family = PF_INET;
     servaddr.sin_addr.s_addr = INADDR_ANY;
-    servaddr.sin_port = htons(8085);
+    servaddr.sin_port = htons(8090);
 
     //bind ip with port 
-    bind(sockfd,(struct sockaddr *) &servaddr, sizeof(servaddr));
+    if(bind(sockfd,(struct sockaddr *) &servaddr, sizeof(servaddr)) < 0 ){
+        std::cerr << "Binding Error: " << std::endl;
+	exit(0);
+    }
 
-    listen(sockfd,5);
+    if(listen(sockfd,5) < 0){
+        std::cerr << "Listening Error: " << std::endl;
+	exit(0);
+    }
     //std::cout << "Server IP: " << servaddr.sin_addr.s_addr << " Port: " << servaddr.sin_port << endl;
     std::cout << "SERVER is now in Listening mode...\n";
 
@@ -137,21 +140,24 @@ int main(int argc, char *arhv[]){
     thread_counter = 0;
     pthread_t interestThread;
     rc = pthread_create(&interestThread,NULL, interestDeamon,NULL);
-    pthread_join(interestThread,NULL);
+    
     while (1)
     {
     clientfd = accept(sockfd,(struct sockaddr * )&cliaddr,(socklen_t *)&addrlen);
     if(clientfd < 0 ){
-        cout<< "Error creating connetion"<<endl;
-        return -1;
+        std::cout<< "Error creating connetion"<< std::endl;
+        continue;
     }
     else{
+	//std::cout<<"Thread:"<<thread_counter << std::endl;
         rc = pthread_create(&threads[thread_counter],NULL,worker,(void *)clientfd);
         // pthread_join(threads[thread_counter],NULL);
         thread_counter++;
         while (thread_counter > NO_OF_THREADS){}
-        // std::cout<<"Thread:"<<thread_counter << endl;
+        
     }
+	
     }
+    pthread_join(interestThread,NULL);
     return 1;
 }

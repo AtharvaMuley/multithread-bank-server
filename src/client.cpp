@@ -9,11 +9,11 @@ int main(int argc, char *argv[]){
     int clientfd,clientlen;
     struct sockaddr_in servaddr;
 
-    clientfd = socket(AF_INET,SOCK_STREAM,0);
+    clientfd = socket(PF_INET,SOCK_STREAM,0);
 
     servaddr.sin_family = AF_INET;
     servaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
-    servaddr.sin_port = htons(8085);
+    servaddr.sin_port = htons(8090);
 
     clientlen = sizeof(servaddr);
     connect(clientfd,(struct sockaddr *)&servaddr,clientlen);
@@ -21,7 +21,7 @@ int main(int argc, char *argv[]){
     MessagePassing message(clientfd);
 
     //Send message to server
-    message.sendMessage("101 101 w 150");
+    message.sendMessage("101 102 w 150");
 
     //Receive from server
     std::string msg = message.receiveMessage();

@@ -5,6 +5,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <string>
+#include <string.h>
 
 #ifndef MessagePassing_H
 #define MessagePassing_H

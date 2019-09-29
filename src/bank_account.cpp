@@ -34,6 +34,7 @@ void BankAccounts::init(){
             no_of_accounts++;
         }
         fp.close();
+	std::cout << "Initialized bank records.\n";
     }
     else{
         std::cout << "Unable to open Records.txt" << std::endl;
@@ -67,10 +68,13 @@ void BankAccounts::interest(){
 bool BankAccounts::islockable(int accountId){
     struct bank_account temp;
     std::list<struct bank_account>:: iterator it;
+	
     for(it =customer_accounts.begin();it != customer_accounts.end();++it){
         if(it->accountId == accountId){
             pthread_mutex_lock(&it->mutex);
-            pthread_cond_wait(&it->lock,&it->mutex); 
+            while(!&it->lock){
+            	 pthread_cond_wait(&it->lock,&it->mutex);
+            }
             return true; 
         }
     }
