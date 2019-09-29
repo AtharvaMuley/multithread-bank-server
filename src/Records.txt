@@ -1,5 +1,5 @@
-101 Mohit1 123434
-102 Atharva 50000
-103 Pratik 342342
-104 Kaustubh 23423
-105 Mayank 34343
+101 Mohit1 120
+102 Atharva 500
+103 Pratik 340
+104 Kaustubh 230
+105 Mayank 300

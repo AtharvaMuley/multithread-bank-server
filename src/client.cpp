@@ -21,16 +21,16 @@ int main(int argc, char *argv[]){
     MessagePassing message(clientfd);
 
     //Send message to server
-    message.sendMessage("101 102 w 500");
+    message.sendMessage("101 101 w 150");
 
     //Receive from server
     std::string msg = message.receiveMessage();
     std::cout<< msg << std::endl;
     sleep(3);
     //Send message to server
-    message.sendMessage("101 104 d 500");
+    //message.sendMessage("101 104 d 500");
     //Receive from server
-    std::string msg2 = message.receiveMessage();
-    std::cout<< msg2 << std::endl;
+    //std::string msg2 = message.receiveMessage();
+    //std::cout<< msg2 << std::endl;
     return 1;
 }

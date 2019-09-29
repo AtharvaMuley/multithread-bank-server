@@ -65,7 +65,7 @@ void *worker(void *arg){
     //withdraw money
     sleep(3);
 
-    if(parsedData[2].compare("w") || parsedData[2].compare("W")){
+    if(parsedData[2] == "w" || parsedData[2]=="W"){
         // std::cout << "Withdraw" << std::endl;
         int transactionStatus = account.withdraw(stoi(parsedData[1]),stoi(parsedData[3]));
         if (transactionStatus == 1){
@@ -82,7 +82,7 @@ void *worker(void *arg){
         
     }
     //Deposit money
-    else if(parsedData[2].compare("d") || parsedData[2].compare("D")){
+    else if(parsedData[2] == "d" || parsedData[2] == "D"){
         // std::cout << "Deposit" << std::endl;
         int transactionStatus = account.deposit(stoi(parsedData[1]),stoi(parsedData[3]));
         if (transactionStatus == 1){
