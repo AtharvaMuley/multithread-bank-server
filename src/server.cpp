@@ -44,7 +44,7 @@ void *worker(void *arg){
 
     //Receive from client
     std::string msg = message.receiveMessage();
-    std::cout<< msg << std::endl;
+    //std::cout<< msg << std::endl;
 
     //Print Parse data
     std::string* parsedData = parseClientData(msg);
@@ -96,7 +96,7 @@ void *worker(void *arg){
     account.removeLock(stoi(parsedData[1]));
     
     //sleep(5);
-    std::cout<<"Exiting client\n";
+    //std::cout<<"Exiting client\n";
     close(clientfd);
     thread_counter--;
     pthread_exit(NULL);
@@ -152,7 +152,7 @@ int main(int argc, char *arhv[]){
     else{
 	//std::cout<<"Thread:"<<thread_counter << std::endl;
         rc = pthread_create(&threads[thread_counter],NULL,worker,(void *)clientfd);
-	std::cout<<"Thread:"<<thread_counter << "clientFD: "<< clientfd<< std::endl;
+	//std::cout<<"Thread:"<<thread_counter << "clientFD: "<< clientfd<< std::endl;
         //pthread_join(threads[thread_counter],NULL);
         thread_counter++;
         while (thread_counter > NO_OF_THREADS){}

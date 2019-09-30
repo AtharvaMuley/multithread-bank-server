@@ -10,7 +10,9 @@
 int counter = 0;
 
 void *clientWorker(void* args){
-std::cout << "Spawned a thread\n";
+char *mmg;
+mmg = (char *) args;
+std::cout << mmg;
 int clientfd,clientlen;
 struct sockaddr_in servaddr;
 clientfd = socket(AF_INET,SOCK_STREAM,0);
@@ -27,7 +29,7 @@ MessagePassing message(clientfd);
 //Send message to server
 char *servMsg;
 //strcpy(servMsg, line.c_str());
-message.sendMessage("101 101 w 300");
+message.sendMessage(mmg);
 std::cout << servMsg <<std::endl;
 //Receive from server
 std::string msg = message.receiveMessage();
@@ -46,9 +48,8 @@ std::ifstream fileread("Transactions.txt");
 if (fileread.is_open()){
 	
 	while(getline(fileread, line)){
-		std::cout<<counter;
 		char servMsg;
-		pthread_create(&threads[counter],NULL, clientWorker,NULL);
+		pthread_create(&threads[counter],NULL, clientWorker,(void*)line.c_str());
 		pthread_join(threads[counter],NULL);
 		counter++;
 	}
