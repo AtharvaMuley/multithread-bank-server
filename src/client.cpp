@@ -7,15 +7,8 @@
 #include "messagepassing.h"
 
 int main(int argc, char *argv[]){
-    		
-	std::string line;
-	std::ifstream fileread("Transactions.txt");
-	if (fileread.is_open()){
-		
-		while(getline(fileread, line)){
-			std::cout << line <<std::endl;
-			
-			int clientfd,clientlen;
+
+	int clientfd,clientlen;
 			struct sockaddr_in servaddr;
 
 			clientfd = socket(AF_INET,SOCK_STREAM,0);
@@ -30,14 +23,24 @@ int main(int argc, char *argv[]){
 			MessagePassing message(clientfd);
 			
 			//Send message to server
-			//line.copy(message, line.length(), 0);
-			message.sendMessage("101 101 d 500");
-
+			char servMsg[1024];
+			//strcpy(servMsg, line.c_str());
+			message.sendMessage("101 101 w 300");
+			std::cout << servMsg <<std::endl;
 			//Receive from server
 			std::string msg = message.receiveMessage();
 			std::cout<< msg << std::endl;
-			shutdown(clientfd,SHUT_RDWR);
+			//shutdown(clientfd,SHUT_RDWR);
 			close(clientfd);
+    		
+	/*std::string line;
+	std::ifstream fileread("Transactions.txt");
+	if (fileread.is_open()){
+		
+		while(getline(fileread, line)){
+			
+			
+			
 			
 		}
 	}
@@ -45,9 +48,9 @@ int main(int argc, char *argv[]){
 		std::cout << "Unable to open Transactions.txt" << std::endl;
         std::_Exit(EXIT_FAILURE);
 	}
-
+*/
     
-    sleep(3);
+    //sleep(3);
     //Send message to server
     //message.sendMessage("101 104 d 500");
     //Receive from server

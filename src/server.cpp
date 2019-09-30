@@ -44,7 +44,7 @@ void *worker(void *arg){
 
     //Receive from client
     std::string msg = message.receiveMessage();
-    std::cout<< msg << std::endl;
+    std::cout<<"ds:" << msg << std::endl;
 
     //Print Parse data
     std::string* parsedData = parseClientData(msg);
@@ -58,7 +58,7 @@ void *worker(void *arg){
     std::cout << "Transacting for accountID: "<<parsedData[1]<< " from ClientID: "<<clientfd<<std::endl;
     account.islockable(stoi(parsedData[1]));
     //withdraw money
-    //sleep(3);
+    
 
     if(parsedData[2] == "w" || parsedData[2]=="W"){
         // std::cout << "Withdraw" << std::endl;
@@ -95,7 +95,8 @@ void *worker(void *arg){
 
     account.removeLock(stoi(parsedData[1]));
     
-    std::cout<<"Exiting client\ns";
+    sleep(5);
+    std::cout<<"Exiting client\n";
     close(clientfd);
     thread_counter--;
     pthread_exit(NULL);
@@ -104,7 +105,7 @@ void *worker(void *arg){
 int main(int argc, char *arhv[]){
     int sockfd,clientfd;
     struct sockaddr_in servaddr,cliaddr;
-    sockfd = socket(PF_INET, SOCK_STREAM, 0);
+    sockfd = socket(AF_INET, SOCK_STREAM, 0);
     int optval = 1;
     setsockopt(sockfd,SOL_SOCKET, SO_REUSEPORT, &optval, sizeof(optval));
     if(sockfd < 0 ){
@@ -116,7 +117,7 @@ int main(int argc, char *arhv[]){
     // memset(&servaddr,0, sizeof(struct sockaddr_in));
 
     //Assign IP with port 
-    servaddr.sin_family = PF_INET;
+    servaddr.sin_family = AF_INET;
     servaddr.sin_addr.s_addr = INADDR_ANY;
     servaddr.sin_port = htons(8090);
 
@@ -151,6 +152,7 @@ int main(int argc, char *arhv[]){
     else{
 	//std::cout<<"Thread:"<<thread_counter << std::endl;
         rc = pthread_create(&threads[thread_counter],NULL,worker,(void *)clientfd);
+	std::cout<<"Thread:"<<thread_counter << "clientFD: "<< clientfd<< std::endl;
         pthread_join(threads[thread_counter],NULL);
         thread_counter++;
         while (thread_counter > NO_OF_THREADS){}
