@@ -95,7 +95,7 @@ void *worker(void *arg){
 
     account.removeLock(stoi(parsedData[1]));
     
-    // std::cout<<"Exiting client\ns";
+    std::cout<<"Exiting client\ns";
     close(clientfd);
     thread_counter--;
     pthread_exit(NULL);
@@ -139,7 +139,7 @@ int main(int argc, char *arhv[]){
     pthread_t threads[5];
     thread_counter = 0;
     pthread_t interestThread;
-    rc = pthread_create(&interestThread,NULL, interestDeamon,NULL);
+    //rc = pthread_create(&interestThread,NULL, interestDeamon,NULL);
     
     while (1)
     {
@@ -151,7 +151,7 @@ int main(int argc, char *arhv[]){
     else{
 	//std::cout<<"Thread:"<<thread_counter << std::endl;
         rc = pthread_create(&threads[thread_counter],NULL,worker,(void *)clientfd);
-        // pthread_join(threads[thread_counter],NULL);
+        pthread_join(threads[thread_counter],NULL);
         thread_counter++;
         while (thread_counter > NO_OF_THREADS){}
         
