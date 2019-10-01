@@ -28,10 +28,10 @@ std::string* parseClientData(std::string clientMsg){
 }
 
 void *interestDeamon(void *arg){
-	std::cout<< "Started calculating Interest\n";
     while(1){
         account.interest();
-    sleep(15);
+	std::cout<< "Interest Paid...\n";
+    	sleep(15);
     }
 }
 
@@ -140,7 +140,7 @@ int main(int argc, char *arhv[]){
     pthread_t threads[5];
     thread_counter = 0;
     pthread_t interestThread;
-    //rc = pthread_create(&interestThread,NULL, interestDeamon,NULL);
+    rc = pthread_create(&interestThread,NULL, interestDeamon,NULL);
     
     while (1)
     {
