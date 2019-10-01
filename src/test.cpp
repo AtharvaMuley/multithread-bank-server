@@ -9,10 +9,25 @@
 
 int counter = 0;
 
+//list<char*> fileQueue;
+pthread_mutex_t filemutex;
+pthread_cond_t filecond;
+std::ofstream filefd;
+void writeToFile(char *tran, char *msg){
+	//std::cout<<"Generating file\n";
+	pthread_mutex_lock(&filemutex);
+	while(!&filecond){
+	pthread_cond_wait(&filecond, &filemutex);
+	}
+	filefd << tran<< " -> " << msg << std::endl;
+	filefd <<"+++++++++++++++++++++++++++++++++++++++++++++++++++\n";
+	pthread_cond_signal(&filecond);
+	pthread_mutex_unlock(&filemutex);
+}
+
 void *clientWorker(void* args){
 char *mmg;
 mmg = (char *) args;
-std::cout << mmg;
 int clientfd,clientlen;
 struct sockaddr_in servaddr;
 clientfd = socket(AF_INET,SOCK_STREAM,0);
@@ -30,10 +45,11 @@ MessagePassing message(clientfd);
 char *servMsg;
 //strcpy(servMsg, line.c_str());
 message.sendMessage(mmg);
-std::cout << servMsg <<std::endl;
+//std::cout << servMsg <<std::endl;
 //Receive from server
-std::string msg = message.receiveMessage();
-std::cout<< msg << std::endl;
+char *msg = message.receiveMessage();
+std::cout<< mmg<< " : " << msg << std::endl;
+writeToFile(mmg,msg);
 //shutdown(clientfd,SHUT_RDWR);
 close(clientfd);
 counter--;
@@ -41,7 +57,7 @@ pthread_exit(NULL);
 }
 
 int main(int argc, char *argv[]){
-
+filefd.open("logs.txt",std::ios::app);
 pthread_t threads[100];
 std::string line;
 std::ifstream fileread("Transactions.txt");
@@ -58,12 +74,5 @@ else{
 	std::cout << "Unable to open Transactions.txt" << std::endl;
 std::_Exit(EXIT_FAILURE);
 }
-    
-    //sleep(3);
-    //Send message to server
-    //message.sendMessage("101 104 d 500");
-    //Receive from server
-    //std::string msg2 = message.receiveMessage();
-    //std::cout<< msg2 << std::endl;
     return 1;
 }
