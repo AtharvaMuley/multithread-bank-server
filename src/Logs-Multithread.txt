@@ -1,4 +1,3 @@
-101 101 w 500 -> 
 101 101 w 500 -> Insufficient Funds!
 +++++++++++++++++++++++++++++++++++++++++++++++++++
 102 103 d 200 -> Deposit Transaction Successful!

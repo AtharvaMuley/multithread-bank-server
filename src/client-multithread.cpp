@@ -57,7 +57,7 @@ pthread_exit(NULL);
 }
 
 int main(int argc, char *argv[]){
-filefd.open("logs.txt",std::ios::app);
+filefd.open("Logs-Multithread.txt",std::ios::app);
 pthread_t threads[100];
 std::string line;
 std::ifstream fileread("Transactions.txt");
