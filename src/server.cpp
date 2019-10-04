@@ -122,7 +122,7 @@ int main(int argc, char *arhv[]){
     }
 
     //fill servaddr with zeros 
-    // memset(&servaddr,0, sizeof(struct sockaddr_in));
+    memset(&servaddr,0, sizeof(struct sockaddr_in));
 
     //Assign IP with port 
     servaddr.sin_family = AF_INET;
@@ -139,7 +139,7 @@ int main(int argc, char *arhv[]){
         std::cerr << "Listening Error: " << std::endl;
 	exit(0);
     }
-    //std::cout << "Server IP: " << servaddr.sin_addr.s_addr << " Port: " << servaddr.sin_port << endl;
+    //std::cout << "Server IP: " << inet_ntoa(servaddr.sin_addr) << " Port: " << servaddr.sin_port<< std::endl;
     std::cout << "SERVER is now in Listening mode...\n";
 
     int addrlen,rc;
