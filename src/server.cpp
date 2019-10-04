@@ -4,6 +4,7 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <string>
+#include <ctime>
 #include <pthread.h>
 #include "messagepassing.h"
 #include "bank_account.h"
@@ -29,8 +30,10 @@ std::string* parseClientData(std::string clientMsg){
 
 void *interestDeamon(void *arg){
     while(1){
+    	time_t timeNow = time(0);
+		tm *time = localtime(&timeNow);
+		std::cout<< "Interest Paid on: "<<time->tm_hour<<":"<<time->tm_min<<":"<<time->tm_sec<<std::endl;
         account.interest();
-	std::cout<< "Interest Paid...\n";
     	sleep(15);
     }
 }
