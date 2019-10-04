@@ -28,9 +28,9 @@ int main(int argc, char *argv[]){
 				MessagePassing message(clientfd);
 				
 				//Send message to server
-				char servMsg[1024];
-				//strcpy(servMsg, line.c_str());
-				message.sendMessage("101 101 w 300");
+				char servMsg[1024] = {0};
+				strcpy(servMsg, line.c_str());
+				message.sendMessage(servMsg);
 				//Receive from server
 				char *msg = message.receiveMessage();
 				std::cout<< line << " -> " << msg<< std::endl;

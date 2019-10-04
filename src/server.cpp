@@ -36,7 +36,7 @@ void *interestDeamon(void *arg){
 }
 
 void *worker(void *arg){
-    int clientfd = (long)arg;
+    int clientfd = *((int *)arg);
     
     pthread_mutex_t lock;
     // std::cout<<"Connection successful: "<<clientfd<< std::endl;
@@ -59,19 +59,22 @@ void *worker(void *arg){
     account.islockable(stoi(parsedData[1]));
     //withdraw money
     
-
+	char response[512] = {0};
     if(parsedData[2] == "w" || parsedData[2]=="W"){
         // std::cout << "Withdraw" << std::endl;
         int transactionStatus = account.withdraw(stoi(parsedData[1]),stoi(parsedData[3]));
         if (transactionStatus == 1){
-            message.sendMessage("Withdraw Transaction Successful!");
+        	strcpy(response,"Withdraw Transaction Successful!");
+            message.sendMessage(response);
         }
         else if(transactionStatus == -1){
-            message.sendMessage("Insufficient Funds!");
+        	strcpy(response,"Insufficient Funds!");
+            message.sendMessage(response);
         }
         else
         {
-            message.sendMessage("Withdraw Transaction Unsuccessful!");
+        	strcpy(response,"Withdraw Transaction Unsuccessful!");
+            message.sendMessage(response);
         }
         
         
@@ -81,11 +84,13 @@ void *worker(void *arg){
         // std::cout << "Deposit" << std::endl;
         int transactionStatus = account.deposit(stoi(parsedData[1]),stoi(parsedData[3]));
         if (transactionStatus == 1){
-            message.sendMessage("Deposit Transaction Successful!");
+        	strcpy(response,"Deposit Transaction Successful!");
+            message.sendMessage(response);
         }
         else
         {
-            message.sendMessage("Deposit Transaction Unsuccessful!");
+        	strcpy(response,"Deposit Transaction Unsuccessful!");
+            message.sendMessage(response);
         }
         
         
@@ -151,7 +156,7 @@ int main(int argc, char *arhv[]){
     }
     else{
 	//std::cout<<"Thread:"<<thread_counter << std::endl;
-        rc = pthread_create(&threads[thread_counter],NULL,worker,(void *)clientfd);
+        rc = pthread_create(&threads[thread_counter],NULL,worker,(void *)&clientfd);
 	//std::cout<<"Thread:"<<thread_counter << "clientFD: "<< clientfd<< std::endl;
         //pthread_join(threads[thread_counter],NULL);
         thread_counter++;

@@ -1,10 +1,10 @@
-101 101 w 500 -> Insufficient Funds!
+101 101 w 500 -> Withdraw Transaction Successful!
 +++++++++++++++++++++++++++++++++++++++++++++++++++++
-102 103 d 200 -> Insufficient Funds!
+102 103 d 200 -> Deposit Transaction Successful!
 +++++++++++++++++++++++++++++++++++++++++++++++++++++
-103 101 d 100 -> Insufficient Funds!
+103 101 d 100 -> Deposit Transaction Successful!
 +++++++++++++++++++++++++++++++++++++++++++++++++++++
 104 102 w 350 -> Insufficient Funds!
 +++++++++++++++++++++++++++++++++++++++++++++++++++++
-105 103 d 150 -> Insufficient Funds!
+105 103 d 150 -> Deposit Transaction Successful!
 +++++++++++++++++++++++++++++++++++++++++++++++++++++

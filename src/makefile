@@ -1,11 +1,17 @@
 CC=g++
 
 compile: server client client-multithread
-server : server.o messagepassing.o bank_account.o 
+server : server.o messagepassing.o bank_account.o
+	$(info )
+	$(info ******** Compiling Server program ********)
 	$(CC) -o server server.o messagepassing.o bank_account.o  -lpthread
 client : client.o messagepassing.o
+	$(info )
+	$(info ******** Compiling Cient program ********)
 	$(CC) -o client client.o messagepassing.o
 client-multithread: client-multithread.o messagepassing.o
+	$(info )
+	$(info ******** Compiling Cient-Multithread program ********)
 	$(CC) -o  client-multithread client-multithread.o messagepassing.o -lpthread
 server.o: server.cpp
 	$(CC) -c server.cpp
