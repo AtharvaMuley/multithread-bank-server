@@ -1,5 +1,7 @@
-101 Mohit1 3000
+101 Mohit1 10000
 102 Atharva 5000
 103 Pratik 340000
 104 Kaustubh 2300
-105 Mayank 3000000
+105 Mayank 30000
+106 Bijal 70000
+107 Ashna 453900

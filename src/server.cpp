@@ -14,9 +14,13 @@
 int thread_counter;
 BankAccounts account;
 
+/*
+	parseClientData is used to Parse the data sent by the client
+*/
 std::string* parseClientData(std::string clientMsg){
     std::string* climsg = new std::string[4];
     std::smatch match;
+    // Parse the message using message
     std::regex re_transaction_parse("([0-9]*)\\s(.[0-9]*)\\s(.[a-zA-Z]*)\\s(.[0-9]*)");
     std::regex_search(clientMsg, match, re_transaction_parse);
     if(match.size()>4){
@@ -28,6 +32,9 @@ std::string* parseClientData(std::string clientMsg){
     return climsg;
 }
 
+/*
+	interestDeamon is used to give interest to clients every 15 seconds.
+*/
 void *interestDeamon(void *arg){
     while(1){
     	time_t timeNow = time(0);
@@ -38,31 +45,29 @@ void *interestDeamon(void *arg){
     }
 }
 
+/*
+	worker in the main function which manages the client's connections.
+*/
 void *worker(void *arg){
     int clientfd = *((int *)arg);
-    
     pthread_mutex_t lock;
-    // std::cout<<"Connection successful: "<<clientfd<< std::endl;
+    char response[512] = {0};
     MessagePassing message(clientfd);
 
     //Receive from client
     std::string msg = message.receiveMessage();
-    //std::cout<< msg << std::endl;
 
-    //Print Parse data
+    //Parse the data
     std::string* parsedData = parseClientData(msg);
 
-    // std::cout << account.fetchBalance(stoi(parsedData[1]))<<std::endl;
-    // std::cout << parsedData[0] << std::endl;
-    // std::cout << parsedData[1] << std::endl;
-    // std::cout << parsedData[2] << std::endl;
-    // std::cout << parsedData[3] << std::endl;
-
     std::cout << "Transacting for accountID: "<<parsedData[1]<< " from ClientID: "<<clientfd<<std::endl;
-    account.islockable(stoi(parsedData[1]));
-    //withdraw money
     
-	char response[512] = {0};
+    // Check if the mutex associated with that specific account number is available. 
+    account.islockable(stoi(parsedData[1]));
+    
+	/*
+	* Check if the client wishes to perform widthdraw function
+	*/
     if(parsedData[2] == "w" || parsedData[2]=="W"){
         // std::cout << "Withdraw" << std::endl;
         int transactionStatus = account.withdraw(stoi(parsedData[1]),stoi(parsedData[3]));
@@ -79,12 +84,12 @@ void *worker(void *arg){
         	strcpy(response,"Withdraw Transaction Unsuccessful!");
             message.sendMessage(response);
         }
-        
-        
     }
-    //Deposit money
+    
+    /*
+	* Check if the client wishes to perform deposit function
+	*/
     else if(parsedData[2] == "d" || parsedData[2] == "D"){
-        // std::cout << "Deposit" << std::endl;
         int transactionStatus = account.deposit(stoi(parsedData[1]),stoi(parsedData[3]));
         if (transactionStatus == 1){
         	strcpy(response,"Deposit Transaction Successful!");
@@ -98,20 +103,22 @@ void *worker(void *arg){
         
         
     }
-    //Send message to client
-    //message.sendMessage("Hello from server");
 
+	// Release the mutex associated with that specific account number.
     account.removeLock(stoi(parsedData[1]));
     
-    //sleep(5);
-    //std::cout<<"Exiting client\n";
+    //Close the client connection
     close(clientfd);
     thread_counter--;
     pthread_exit(NULL);
 }
 
 int main(int argc, char *arhv[]){
+	int addrlen,rc;
     int sockfd,clientfd;
+    pthread_t threads[5],interestThread;
+    thread_counter = 0;
+    
     struct sockaddr_in servaddr,cliaddr;
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     int optval = 1;
@@ -142,31 +149,27 @@ int main(int argc, char *arhv[]){
     //std::cout << "Server IP: " << inet_ntoa(servaddr.sin_addr) << " Port: " << servaddr.sin_port<< std::endl;
     std::cout << "SERVER is now in Listening mode...\n";
 
-    int addrlen,rc;
+    
     addrlen = sizeof(cliaddr);
     account.init();
-    pthread_t threads[5];
-    thread_counter = 0;
-    pthread_t interestThread;
+    
+    // Start the intrest Thread
     rc = pthread_create(&interestThread,NULL, interestDeamon,NULL);
     
     while (1)
     {
-    clientfd = accept(sockfd,(struct sockaddr * )&cliaddr,(socklen_t *)&addrlen);
-    if(clientfd < 0 ){
-        std::cout<< "Error creating connetion"<< std::endl;
-        continue;
+    	clientfd = accept(sockfd,(struct sockaddr * )&cliaddr,(socklen_t *)&addrlen);
+    	if(clientfd < 0 ){
+        	std::cout<< "Error creating connetion"<< std::endl;
+        	continue;
+    	}
+    	else{
+        	rc = pthread_create(&threads[thread_counter],NULL,worker,(void *)&clientfd);
+        	thread_counter++;
+        	while (thread_counter > NO_OF_THREADS){
+        		/* While thread limit had reached wait till the current clients close the connection*/
+        	}  
     }
-    else{
-	//std::cout<<"Thread:"<<thread_counter << std::endl;
-        rc = pthread_create(&threads[thread_counter],NULL,worker,(void *)&clientfd);
-	//std::cout<<"Thread:"<<thread_counter << "clientFD: "<< clientfd<< std::endl;
-        //pthread_join(threads[thread_counter],NULL);
-        thread_counter++;
-        while (thread_counter > NO_OF_THREADS){}
-        
-    }
-	
     }
     pthread_join(interestThread,NULL);
     return 1;

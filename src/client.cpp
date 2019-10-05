@@ -8,10 +8,16 @@
 
 int main(int argc, char *argv[]){	
 	std::string line;
+	//Create Transactions.txt
 	std::ifstream fileread("Transactions.txt");
+	//create Logs-SingleThread.txt
 	std::ofstream logwrite("Logs-SingleThread");
+
 	if (fileread.is_open()){
 		if(logwrite.is_open()){
+			/*
+			* Read each transaction from Transactions.txt and copy it in line variable
+			*/
 			while(getline(fileread, line)){
 				int clientfd,clientlen;
 				struct sockaddr_in servaddr;
@@ -27,17 +33,17 @@ int main(int argc, char *argv[]){
 
 				MessagePassing message(clientfd);
 				
-				//Send message to server
 				char servMsg[1024] = {0};
 				strcpy(servMsg, line.c_str());
+				//Send the transaction to the server
 				message.sendMessage(servMsg);
-				//Receive from server
+				
+				//Receive the transaction status from server
 				char *msg = message.receiveMessage();
 				std::cout<< line << " -> " << msg<< std::endl;
 				logwrite << line << " -> " << msg << "\n+++++++++++++++++++++++++++++++++++++++++++++++++++++\n";
-				//shutdown(clientfd,SHUT_RDWR);
+				//close the client
 				close(clientfd);
-				
 			}
 		}
 		else{
@@ -47,8 +53,7 @@ int main(int argc, char *argv[]){
 	}
 	else{
 		std::cout << "Unable to open Transactions.txt" << std::endl;
-        std::_Exit(EXIT_FAILURE);
+        	std::_Exit(EXIT_FAILURE);
 	}
- 
     return 1;
 }
